@@ -1,0 +1,16 @@
+.rdp-day_selected:not([disabled]) {
+  font-weight: bold;
+  font-size: 140%;
+  color: black;
+  background-color: #0fcfec !important;
+}
+
+.rdp-day_selected:not([disabled]) :hover {
+  color: black;
+}
+
+.rdp {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  padding: 2rem;
+  border-radius: 10px;
+}
