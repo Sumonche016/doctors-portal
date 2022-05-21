@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import auth from '../../../../firebase.init'
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useSendPasswordResetEmail, useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import { useForm } from "react-hook-form";
 import Loading from '../../Shared/Loading/Loading';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import useToken from '../../../../Hooks/Usetoken';
 
 const Login = () => {
 
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const { register, formState: { errors }, handleSubmit } = useForm();
-
+    // const [email, setEmail] = useState('')
     const [
         signInWithEmailAndPassword,
         user,
@@ -17,11 +18,14 @@ const Login = () => {
         error,
     ] = useSignInWithEmailAndPassword(auth);
 
+
+
+    const [token] = useToken(gUser || user)
+
     const location = useLocation()
     const navigate = useNavigate()
 
     let from = location?.state?.from?.pathname || '/'
-
 
     let signInerror;
 
@@ -34,32 +38,33 @@ const Login = () => {
         return <Loading></Loading>
     }
 
-    if (gUser || user) {
+    if (token) {
         navigate(from, { replace: true });
     }
 
 
     const onSubmit = data => {
         signInWithEmailAndPassword(data.email, data.password)
+
     };
 
 
     return (
         <div>
             <div className='flex justify-center items-center h-screen'>
-                <div class="card w-96 bg-base-100 shadow-xl">
-                    <div class="card-body">
-                        <h2 class="card-title text-center block mb-5">Log In</h2>
+                <div className="card w-96 bg-base-100 shadow-xl">
+                    <div className="card-body">
+                        <h2 className="card-title text-center block mb-5">Log In</h2>
 
                         {/* email */}
 
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <div class="form-control w-full max-w-xs">
-                                <label class="label">
+                            <div className="form-control w-full max-w-xs">
+                                <label className="label">
                                     <span className="label-text">Your Email</span>
                                 </label>
                                 <input type="email" placeholder="Email"
-                                    class="input input-bordered w-full max-w-xs"
+                                    className="input input-bordered w-full max-w-xs"
                                     {...register("email", {
                                         required: {
                                             value: true,
@@ -79,12 +84,12 @@ const Login = () => {
                                 </label>
                             </div>
 
-                            <div class="form-control w-full max-w-xs">
-                                <label class="label">
+                            <div className="form-control w-full max-w-xs">
+                                <label className="label">
                                     <span className="label-text">Your Password</span>
                                 </label>
                                 <input type="password" placeholder="Password"
-                                    class="input input-bordered w-full max-w-xs"
+                                    className="input input-bordered w-full max-w-xs"
                                     {...register("password", {
                                         minLength: {
                                             value: 6,
@@ -106,10 +111,14 @@ const Login = () => {
                             {signInerror}
 
                             <input className='btn w-full' type="submit" value='LogIn' />
+
+                            <p className='mt-3'><small>Forget Password ?
+                                <button className="btn btn-link">
+                                    Reset Here</button> </small></p>
                             <p className='mt-3'><small>New To Doctors Portal  <Link to='/register' className='text-primary'>Create Account</Link> </small></p>
 
                         </form>
-                        <div class="divider">OR</div>
+                        <div className="divider">OR</div>
                         <button className="btn btn-outline"
                             onClick={() => signInWithGoogle()}
                         >Continue With google</button>

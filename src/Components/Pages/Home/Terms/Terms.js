@@ -4,18 +4,18 @@ import treatment from '../../../../images/treatment.png'
 const Terms = () => {
     return (
         <div className='w-[90%] mx-auto py-20'>
-            <div class=" lg:card-side  ">
+            <div className=" lg:card-side  ">
                 <div className='grid grid-cols-1 md:grid-cols-2'>
                     <div className='flex justify-center'>
                         <img className='h-[576px] w-[500px]' src={treatment} alt="" />
                     </div>
-                    <div class=" flex justify-center items-start flex-col">
+                    <div className=" flex justify-center items-start flex-col">
                         <div>
-                            <h2 class="text-[48px] mb-5 leading-none font-bold">Exceptional Dental Care, on Your Terms</h2>
+                            <h2 className="text-[48px] mb-5 leading-none font-bold">Exceptional Dental Care, on Your Terms</h2>
                             <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsumis that
                                 it has a more-or-less normal distribution of letters,as opposed to using 'Content here, content here', making it look like readable English.
                                 Many desktop publishing packages and web page.</p>
-                            <button class="btn btn-primary mt-5">Listen</button>
+                            <button className="btn btn-primary mt-5">Listen</button>
                         </div>
                     </div>
                 </div>

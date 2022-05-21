@@ -5,24 +5,33 @@ import { useForm } from "react-hook-form";
 import Loading from '../../Shared/Loading/Loading';
 import { Link, useNavigate } from 'react-router-dom';
 import auth from '../../../../firebase.init';
-import { async } from '@firebase/util';
+
+import useToken from '../../../../Hooks/Usetoken';
 
 const Register = () => {
+    const navigate = useNavigate()
+
     const [
         createUserWithEmailAndPassword,
         user,
         loading,
         error,
     ] = useCreateUserWithEmailAndPassword(auth);
-    const navigate = useNavigate()
-    const [signInWithGoogle] = useSignInWithGoogle(auth);
+
+
+    const [signInWithGoogle, gUser] = useSignInWithGoogle(auth);
+
+    const [token] = useToken(user || gUser)
+
     const [updateProfile, updating, updateError] = useUpdateProfile(auth);
 
     const { register, formState: { errors }, handleSubmit } = useForm();
 
 
-    let signInerror;
 
+
+
+    let signInerror;
     if (loading || updating) {
         return <Loading></Loading>
     }
@@ -30,12 +39,15 @@ const Register = () => {
     if (error || updateError) {
         signInerror = <p className='text-red-500'>{error?.message}</p>
     }
+    if (token) {
+        navigate('/appointment')
+    }
 
     const onSubmit = async data => {
         await createUserWithEmailAndPassword(data.email, data.password)
         await updateProfile({ displayName: data.name })
         console.log('update done')
-        navigate('/appointment')
+        // navigate('/appointment')
 
     };
 
@@ -43,18 +55,18 @@ const Register = () => {
     return (
         <div>
             <div className='flex justify-center items-center h-screen'>
-                <div class="card w-96 bg-base-100 shadow-xl">
-                    <div class="card-body">
-                        <h2 class="card-title text-center block mb-5">Register</h2>
+                <div className="card w-96 bg-base-100 shadow-xl">
+                    <div className="card-body">
+                        <h2 className="card-title text-center block mb-5">Register</h2>
 
 
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <div class="form-control w-full max-w-xs">
-                                <label class="label">
+                            <div className="form-control w-full max-w-xs">
+                                <label className="label">
                                     <span className="label-text">Your Name</span>
                                 </label>
                                 <input type="text" placeholder="Name"
-                                    class="input input-bordered w-full max-w-xs"
+                                    className="input input-bordered w-full max-w-xs"
                                     {...register("name", {
                                         required: {
                                             value: true,
@@ -69,12 +81,12 @@ const Register = () => {
                                 </label>
                             </div>
 
-                            <div class="form-control w-full max-w-xs">
-                                <label class="label">
+                            <div className="form-control w-full max-w-xs">
+                                <label className="label">
                                     <span className="label-text">Your Email</span>
                                 </label>
                                 <input type="email" placeholder="Email"
-                                    class="input input-bordered w-full max-w-xs"
+                                    className="input input-bordered w-full max-w-xs"
                                     {...register("email", {
                                         required: {
                                             value: true,
@@ -96,12 +108,12 @@ const Register = () => {
 
 
 
-                            <div class="form-control w-full max-w-xs">
-                                <label class="label">
+                            <div className="form-control w-full max-w-xs">
+                                <label className="label">
                                     <span className="label-text">Your Password</span>
                                 </label>
                                 <input type="password" placeholder="Password"
-                                    class="input input-bordered w-full max-w-xs"
+                                    className="input input-bordered w-full max-w-xs"
                                     {...register("password", {
                                         minLength: {
                                             value: 6,
@@ -126,7 +138,7 @@ const Register = () => {
                             <p className='mt-3'> <small>Already User     <Link to='/login' className='text-primary ml-1'>login</Link> </small></p>
 
                         </form>
-                        <div class="divider">OR</div>
+                        <div className="divider">OR</div>
                         <button className="btn btn-outline"
                             onClick={() => signInWithGoogle()}
                         >Continue With google</button>

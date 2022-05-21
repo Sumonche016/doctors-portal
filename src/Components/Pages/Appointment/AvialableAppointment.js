@@ -1,18 +1,23 @@
 import { format } from 'date-fns';
-import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import React, { useState } from 'react';
 import Modal from './Modal';
 import Service from './Service';
+import Loading from '../../Pages/Shared/Loading/Loading'
 
 const AvialableAppointment = ({ date }) => {
-    const [services, setServices] = useState([])
+    // const [services, setServices] = useState([])
     const [treatment, setTreatment] = useState([])
+    const formatedDate = format(date, 'PP')
 
-    useEffect(() => {
-        fetch('http://localhost:5000/services')
+    const { data: services, isLoading, refetch } = useQuery(['available', formatedDate], () =>
+        fetch(`http://localhost:5000/available?date=${formatedDate}`)
             .then(data => data.json())
-            .then(res => setServices(res))
-    }, [])
-    console.log(services)
+    )
+    if (isLoading) {
+        return <Loading></Loading>
+    }
+
     return (
         <div>
             <div className='flex justify-center py-20' >
@@ -28,7 +33,7 @@ const AvialableAppointment = ({ date }) => {
             </div>
 
             {
-                treatment && <Modal date={date} treatment={treatment} setTreatment={setTreatment}></Modal>
+                treatment && <Modal refetch={refetch} date={date} treatment={treatment} setTreatment={setTreatment}></Modal>
             }
 
         </div>
